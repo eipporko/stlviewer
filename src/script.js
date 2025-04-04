@@ -12,7 +12,7 @@ const loader = new STLLoader();
 const matcapTexture = textureLoader.load('./textures/matcaps/312D20_80675C_8B8C8B_85848C-256px.png');
 const matcap = new THREE.MeshMatcapMaterial({ matcap: matcapTexture, side: THREE.DoubleSide });
 const normalMaterial = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });
-const depthMaterial = new THREE.MeshDepthMaterial({ side: THREE.DoubleSide });
+const depthMaterial = new THREE.MeshDepthMaterial({ depthPacking: THREE.BasicDepthPacking, side: THREE.DoubleSide });
 
 
 const materialOptions = {
@@ -80,6 +80,16 @@ gui.add(materialSelector, 'description', materialOptions).name('Material').onCha
     }
 });
 
+gui.add({
+    exportPNG: () => {
+        renderer.render(scene, camera);
+        const link = document.createElement('a');
+        link.download = materialSelector.description + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+}, 'exportPNG').name('Export PNG');
+
 
 
 // Canvas
@@ -107,11 +117,11 @@ function adjustCameraToGeometry(camera, controls, geometry) {
     const fov = camera.fov * (Math.PI / 180);
     const cameraZ = Math.abs(maxDim / (2 * Math.tan(fov / 2)));
 
-    const near = cameraZ - maxDim * 2;
-    const far = cameraZ + maxDim * 2;
+    const near = cameraZ - maxDim;
+    const far = cameraZ + maxDim;
 
     camera.position.set(center.x, center.y, cameraZ + center.z);
-    camera.near = Math.max(0.1, near);
+    camera.near = Math.max(0.5, near);
     camera.far = far;
     camera.updateProjectionMatrix();
 
@@ -145,10 +155,10 @@ window.addEventListener('resize', () => {
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-camera.position.z = 3;
-camera.position.y = 3;
-camera.position.x = 3;
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.5, 10);
+camera.position.z = 1.5;
+camera.position.y = 1.5;
+camera.position.x = 1.5;
 scene.add(camera);
 
 // Controls
