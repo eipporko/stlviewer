@@ -17,7 +17,7 @@ Follow the instructions below to clone, install dependencies and deploy the proj
 ### Clone the Repository
 ```bash
 git clone https://github.com/eipporko/stlviewer.git
-cd stlViewer
+cd stlviewer
 ```
 
 ### Install Dependencies
