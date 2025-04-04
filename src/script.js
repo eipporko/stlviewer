@@ -7,6 +7,23 @@ const textureLoader = new THREE.TextureLoader();
 const loader = new STLLoader();
 
 /**
+ * Textures
+ */
+const matcapTexture = textureLoader.load('./textures/matcaps/312D20_80675C_8B8C8B_85848C-256px.png');
+const matcap = new THREE.MeshMatcapMaterial({ matcap: matcapTexture, side: THREE.DoubleSide });
+const normalMaterial = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });
+const depthMaterial = new THREE.MeshDepthMaterial({ side: THREE.DoubleSide });
+
+
+const materialOptions = {
+    Matcap: 'matcap',
+    Depth: 'depth',
+    Normal: 'normal'
+};
+const materialSelector = { description: 'matcap', material: matcap };
+
+
+/**
  * Base
  */
 // Debug
@@ -32,7 +49,7 @@ gui.add({
                     geometry.translate(-center.x, -center.y, -center.z);
                     geometry.rotateX(- Math.PI / 2);
 
-                    const mesh = new THREE.Mesh(geometry, material);
+                    mesh = new THREE.Mesh(geometry, materialSelector.material);
 
                     adjustCameraToGeometry(camera, controls, geometry);
 
@@ -45,6 +62,24 @@ gui.add({
     }
 }, 'loadModel').name('Load Model');
 
+gui.add(materialSelector, 'description', materialOptions).name('Material').onChange((value) => {
+    switch (value) {
+        case 'matcap':
+            materialSelector.material = matcap;
+            break;
+        case 'depth':
+            materialSelector.material = depthMaterial;
+            break;
+        case 'normal':
+            materialSelector.material = normalMaterial;
+            break;
+    }
+
+    if (mesh) {
+        mesh.material = materialSelector.material;
+    }
+});
+
 
 
 // Canvas
@@ -54,11 +89,6 @@ const canvas = document.querySelector('canvas.webgl');
 const scene = new THREE.Scene()
 scene.background = new THREE.Color(0xffffff)
 
-/**
- * Textures
- */
-const matcapTexture = textureLoader.load('./textures/matcaps/312D20_80675C_8B8C8B_85848C-256px.png');
-const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture, side: THREE.DoubleSide });
 
 /**
  * STL
@@ -138,11 +168,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 /**
  * Default model
  */
-const defaultMesh = new THREE.Mesh(
+let mesh = new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),
-    material
+    matcap
 );
-scene.add(defaultMesh);
+scene.add(mesh);
 
 
 
