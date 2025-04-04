@@ -20,7 +20,7 @@ const materialOptions = {
     Depth: 'depth',
     Normal: 'normal'
 };
-const materialSelector = { description: 'matcap', material: matcap };
+const materialSelector = { description: 'matcap', material: matcap, background : new THREE.Color(0xffffff) };
 
 
 /**
@@ -66,17 +66,21 @@ gui.add(materialSelector, 'description', materialOptions).name('Material').onCha
     switch (value) {
         case 'matcap':
             materialSelector.material = matcap;
+            materialSelector.background = new THREE.Color(0xffffff);
             break;
         case 'depth':
             materialSelector.material = depthMaterial;
+            materialSelector.background = new THREE.Color(0x000000);
             break;
         case 'normal':
             materialSelector.material = normalMaterial;
+            materialSelector.background = new THREE.Color(0xffffff);
             break;
     }
 
     if (mesh) {
         mesh.material = materialSelector.material;
+        scene.background = materialSelector.background;
     }
 });
 
