@@ -3,42 +3,47 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { STLLoader } from 'three/addons/loaders/STLLoader.js'
 import GUI from 'lil-gui'
 
+const textureLoader = new THREE.TextureLoader();
+const loader = new STLLoader();
 
 /**
  * Base
  */
 // Debug
 const gui = new GUI();
-gui.add({ loadModel: () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.stl';
-    input.addEventListener('change', (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
+gui.add({
+    loadModel: () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.stl';
+        input.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
 
-                scene.clear();
+                    scene.clear();
 
-                const geometry = loader.parse(e.target.result);
-                geometry.computeBoundingBox();
-                const boundingBox = geometry.boundingBox;
-                const center = new THREE.Vector3();
-                boundingBox.getCenter(center);
-                geometry.translate(-center.x, -center.y, -center.z);
+                    const geometry = loader.parse(e.target.result);
+                    geometry.computeBoundingBox();
+                    const boundingBox = geometry.boundingBox;
+                    const center = new THREE.Vector3();
+                    boundingBox.getCenter(center);
+                    geometry.translate(-center.x, -center.y, -center.z);
+                    geometry.rotateX(- Math.PI / 2);
 
-                const mesh = new THREE.Mesh(geometry, material);
+                    const mesh = new THREE.Mesh(geometry, material);
 
-                adjustCameraToGeometry(camera, controls, geometry);
+                    adjustCameraToGeometry(camera, controls, geometry);
 
-                scene.add(mesh);
-            };
-            reader.readAsArrayBuffer(file);
-        }
-    });
-    input.click();
-}}, 'loadModel').name('Load Model');
+                    scene.add(mesh);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        });
+        input.click();
+    }
+}, 'loadModel').name('Load Model');
 
 
 
@@ -52,9 +57,8 @@ scene.background = new THREE.Color(0xffffff)
 /**
  * Textures
  */
-const textureLoader = new THREE.TextureLoader();
 const matcapTexture = textureLoader.load('./textures/matcaps/312D20_80675C_8B8C8B_85848C-256px.png');
-const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture });
+const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture, side: THREE.DoubleSide });
 
 /**
  * STL
@@ -85,23 +89,6 @@ function adjustCameraToGeometry(camera, controls, geometry) {
     controls.update();
 }
 
-const loader = new STLLoader();
-loader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/stl/ascii/pr2_head_pan.stl', function (geometry) {
-
-    const mesh = new THREE.Mesh(geometry, material);
-    geometry.computeBoundingBox();
-    const boundingBox = geometry.boundingBox;
-    const center = new THREE.Vector3();
-    boundingBox.getCenter(center);
-
-    geometry.translate(-center.x, -center.y, -center.z);
-
-    adjustCameraToGeometry(camera, controls, geometry);
-
-    scene.add(mesh);
-
-});
-
 /**
  * Sizes
  */
@@ -129,7 +116,9 @@ window.addEventListener('resize', () => {
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-camera.position.z = 1;
+camera.position.z = 3;
+camera.position.y = 3;
+camera.position.x = 3;
 scene.add(camera);
 
 // Controls
@@ -144,6 +133,18 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+
+/**
+ * Default model
+ */
+const defaultMesh = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    material
+);
+scene.add(defaultMesh);
+
+
 
 /**
  * Animate
