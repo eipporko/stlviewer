@@ -1,0 +1,105 @@
+.stl-viewer-container {
+  position: relative;
+  display: inline-block;
+  background: #f5f5f5;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stl-viewer-canvas {
+  display: block;
+  outline: none;
+  cursor: grab;
+}
+
+.stl-viewer-canvas:active {
+  cursor: grabbing;
+}
+
+.stl-viewer-controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 200px;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.control-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.load-button, .export-button {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.load-button:hover, .export-button:hover {
+  background: #0056b3;
+}
+
+.load-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+.material-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.material-select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.export-button {
+  background: #28a745;
+}
+
+.export-button:hover {
+  background: #1e7e34;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .stl-viewer-controls {
+    position: static;
+    margin-top: 10px;
+    background: white;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+  
+  .stl-viewer-container {
+    flex-direction: column;
+  }
+}

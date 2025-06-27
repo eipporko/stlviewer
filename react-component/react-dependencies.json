@@ -1,0 +1,14 @@
+{
+  "name": "react-stl-viewer-dependencies",
+  "description": "Dependencies needed to integrate STLViewer component into React app",
+  "dependencies": {
+    "three": "^0.175.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "installation_commands": [
+    "npm install three@^0.175.0",
+    "npm install react@^18.0.0 react-dom@^18.0.0"
+  ],
+  "note": "You may already have React installed. Only install Three.js if not already present."
+}
